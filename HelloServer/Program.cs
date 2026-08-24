@@ -91,7 +91,7 @@ public class Program
         // (강의장에서 서버 실행했을때 주소 확인용)
         Announce(perSecond, logMoves);
         
-        app.Run("http://0.0.0.0:5000");
+        app.Run();
     }
 
     // 수업에서 안한 함수
