@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Net;
+using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Text;
 
@@ -85,9 +87,29 @@ public class Program
         // _ : 반환형이 있지만 안쓸때 언더바 사용함
         _ = hub.BroadcastLoopAsync(app.Lifetime.ApplicationStopped);
         
+        // 어느 주소로 찾아오면 되는지 한번 출력함
+        // (강의장에서 서버 실행했을때 주소 확인용)
+        Announce(perSecond, logMoves);
+        
         app.Run("http://0.0.0.0:5000");
     }
 
+    // 수업에서 안한 함수
+    private static void Announce(int perSecond, int logMoves)
+    {
+        string moveLog = logMoves <= 0
+            ? "위치 로그는 안 찍는다"
+            : $"위치 로그는 사람마다 초당 {logMoves}줄";
+
+        Console.WriteLine($"[방] 초당 {perSecond}번 뿌린다. {moveLog}.");
+
+        foreach (IPAddress address in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
+        {
+            if (address.AddressFamily != AddressFamily.InterNetwork) continue;
+            if (IPAddress.IsLoopback(address)) continue;
+            Console.WriteLine($"[방] 접속 주소: {address}");
+        }
+    }
 
     private static void HttpStudy(string[] args)
     {

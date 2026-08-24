@@ -145,6 +145,8 @@ public class Room
         member.X = move.X;
         member.Y = move.Y;
         member.MovesSinceLog++;
+        
+        LogMove(member, move);
     }
 
     // 채팅 관련 메시지를 처리하는 함수
@@ -371,4 +373,30 @@ public class Room
     #endregion
     
     
+    // LogMove 함수는 수업에서 안한 부분
+    // 위치가 들어오고 있다는 것을 눈으로 보여 주는 함수. 
+    // 사실 없어도 그만.
+    
+    // 받을 때마다 찍지 않고 간격을 두는 이유?
+    // : 오는 것을 다 찍으면 콘솔이 위치로만 채워져 정작 중요한 들어옴,나감이 안 보인다.
+    //  대신 그동안 몇 번 받았는지 출력해줌.
+    private void LogMove(Member member, MoveMessage move)
+    {
+        if (logMovesPerSecond <= 0) return;
+
+        TimeSpan gap = DateTime.Now - member.LastLogAt;
+        if (gap.TotalSeconds < 1.0 / logMovesPerSecond) return;
+
+        // 보낸 쪽이 적은 번호가 서버가 아는 번호와 다르면 그대로 드러내 준다.
+        // 평소에는 같으므로 아무것도 붙지 않는다.
+        string claimed = move.Id == member.User.Id ? "" : $"  (보낸 쪽이 적은 번호 : {move.Id})";
+
+        Console.WriteLine(
+            $"[{code}] 받음 {member.User.NickName}({member.User.Id}) " +
+            $"({member.X,7:F2}, {member.Y,7:F2})  " +
+            $"지난 {gap.TotalSeconds:F1}초에 {member.MovesSinceLog}번{claimed}");
+
+        member.MovesSinceLog = 0;
+        member.LastLogAt = DateTime.Now;
+    }
 }
