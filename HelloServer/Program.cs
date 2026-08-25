@@ -113,6 +113,7 @@ public class Program
 
     private static void HttpStudy(string[] args)
     {
+        // 주석 처리
         // 잊지 말고 해줘야 할것이. 우리는 한글은 쓴다
         // 한글 출력을 위해 OutputEncoding을 설정해준다
         Console.OutputEncoding = Encoding.UTF8;
