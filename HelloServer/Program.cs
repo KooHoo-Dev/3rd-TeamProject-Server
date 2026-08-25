@@ -76,6 +76,8 @@ public class Program
                 await context.Response.WriteAsync("방코드 해석 불가능");
                 return;
             }
+
+            Console.WriteLine($"[!!!!누군가 들어왔다고!!!!]");
             
             // 여기까지 오면 예외처리 완료된것
             // 소켓을 만들어 준다(연결을 받아준다)
